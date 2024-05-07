@@ -6,8 +6,8 @@ import { getArticles, getUsers } from "../../api.get"
 
 export const ArticleList = () => {
 
-    const [articles, setArticles] = useState([])
-
+    const [articles, setArticles] = useState([]);
+    
 
     useEffect (() => {
         getArticles()

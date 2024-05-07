@@ -2,18 +2,20 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { getSingleArticle, getCommentsForArticle } from "../../api.get"
+import { patchVotes } from "../../api.patch"
 
 export const SingleArticle = () => {
 
-    const [article, setArticle] = useState(null)
-    const [comments, setComments] = useState([])
+    const [article, setArticle] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [voteChanges, setVoteChanges] = useState({});
 
     const { article_id } = useParams()
 
     useEffect (() => {
         getSingleArticle(article_id)
         .then((body) => {
-            setArticle(body)
+            setArticle(body[0])
         })
     }, [article_id])
 
@@ -24,7 +26,10 @@ export const SingleArticle = () => {
         })
     }, [article_id])
     
-    console.log('1.', comments);
+    const handleVote = (article_id, vote) => {
+            patchVotes(article_id, vote);
+            setVoteChanges(prev => ({...prev, [article_id]: vote}));
+            }
 
     return (
         <>
@@ -32,12 +37,15 @@ export const SingleArticle = () => {
 
         <div>
             {article && (
-                <div key={article[0].article_id} className="article-card">
-                <img className src={article[0].article_img_url} alt="" />  
-                <p>Title: {article[0].title}</p>
-                <p>Topic: {article[0].topic}</p>
-                <p>Comments: {article[0].comment_count}</p>
-                <p>Date Posted: {article[0].created_at}</p>
+                <div key={article.article_id} className="article-card">
+                <img className src={article.article_img_url} alt="" />  
+                <p>Title: {article.title}</p>
+                <p>Topic: {article.topic}</p>
+                <p>Comments: {article.comment_count}</p>
+                <p>Date Posted: {article.created_at}</p>
+                <button disabled={voteChanges[article_id] === 1} onClick={() => handleVote(article_id, 1)}>+</button>
+                <p>Votes: {article.votes + voteChanges[article_id] || 0}</p>
+                <button disabled={voteChanges[article_id] === -1} onClick={() => handleVote(article_id, -1)}>-</button>
                 </div> 
             )}
         </div>
@@ -49,12 +57,11 @@ export const SingleArticle = () => {
             <p>Author: {comment.author}</p>
             <p>Comment: {comment.body}</p>
             <p>Votes: {comment.votes}</p>
+            <p>Date: {comment.created_at}</p>
             </div>
             )
         })}
-
         </div>
         </>
     )
-
 }

@@ -1,25 +1,30 @@
 import { useEffect } from "react"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
-import { getSingleArticle, getArticles } from "../../api.get"
+import { getSingleArticle, getCommentsForArticle } from "../../api.get"
 
 export const SingleArticle = () => {
 
     const [article, setArticle] = useState(null)
+    const [comments, setComments] = useState([])
 
     const { article_id } = useParams()
 
     useEffect (() => {
         getSingleArticle(article_id)
         .then((body) => {
-            console.log('5.', body);
             setArticle(body)
         })
     }, [article_id])
 
-     console.log(("1.", article_id));
-     console.log('2.', article);
+    useEffect (() => {
+        getCommentsForArticle(article_id)
+        .then((body) => {
+            setComments(body.comments)
+        })
+    }, [article_id])
     
+    console.log('1.', comments);
 
     return (
         <>
@@ -34,8 +39,20 @@ export const SingleArticle = () => {
                 <p>Comments: {article[0].comment_count}</p>
                 <p>Date Posted: {article[0].created_at}</p>
                 </div> 
-
             )}
+        </div>
+
+        <div className ="comment">
+            {comments.map((comment) => {
+            return (
+            <div>
+            <p>Author: {comment.author}</p>
+            <p>Comment: {comment.body}</p>
+            <p>Votes: {comment.votes}</p>
+            </div>
+            )
+        })}
+
         </div>
         </>
     )

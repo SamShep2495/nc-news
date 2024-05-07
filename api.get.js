@@ -35,3 +35,15 @@ export const getUsers = () => {
         throw err;
     });
 }
+
+export const getSingleArticle = (article_id) => {
+    return ucArticlesUrl.get(`/articles/${article_id}`)
+    .then((res) => {
+        return res.data;
+    })
+    .catch((err) => {
+        console.error(err);
+        throw err;
+    });
+}
+

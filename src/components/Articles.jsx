@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useState } from "react"
-import { getArticles } from "../../api.get"
+import { getArticles, getUsers } from "../../api.get"
 
 
 
@@ -16,6 +16,7 @@ export const ArticleList = () => {
         })
     }, [])
 
+
     return (
         <> 
         <div className='spacing'></div>
@@ -23,7 +24,7 @@ export const ArticleList = () => {
 
         <label></label>
         
-        <div >{articles.map((article) => {
+        <div>{articles.map((article) => {
             return (
                 
                 <div key={article.article_id} className="article-card">
@@ -31,7 +32,7 @@ export const ArticleList = () => {
                 <p>Title: {article.title}</p>
                 <p>Topic: {article.topic}</p>
                 <p>Comments: {article.comment_count}</p>
-                <p>{article.created_at}</p>
+                <p>Date Posted: {article.created_at}</p>
                 </div> 
         )
         })}</div>

@@ -47,3 +47,13 @@ export const getSingleArticle = (article_id) => {
     });
 }
 
+export const getCommentsForArticle = (article_id) => {
+    return ucArticlesUrl.get(`/articles/${article_id}/comments`)
+    .then((res) => {
+        return res.data;
+    })
+    .catch((err) => {
+        console.error(err);
+        throw err;
+    });
+}

@@ -21,9 +21,6 @@ export const ArticleList = () => {
         <> 
         <div className='spacing'></div>
         
-
-        <label></label>
-        
         <div>{articles.map((article) => {
             return (
                 

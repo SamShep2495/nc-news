@@ -13,3 +13,25 @@ export const getArticles = () => {
         throw err;
     });
 }
+
+export const getTopics = () => {
+    return ucArticlesUrl.get('/topics')
+    .then((res) => {
+        return res.data;
+    })
+    .catch((err) => {
+        console.error(err);
+        throw err;
+    });
+}
+
+export const getUsers = () => {
+    return ucArticlesUrl.get('/users')
+    .then((res) => {
+        return res.data;
+    })
+    .catch((err) => {
+        console.error(err);
+        throw err;
+    });
+}

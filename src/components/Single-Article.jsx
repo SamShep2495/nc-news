@@ -1,14 +1,17 @@
-import { useEffect } from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getSingleArticle, getCommentsForArticle } from "../../api.get"
+import { getSingleArticle, getCommentsForArticle, getUsers } from "../../api.get"
 import { patchVotes } from "../../api.patch"
+import { postComment } from "../../api.post"
 
 export const SingleArticle = () => {
 
     const [article, setArticle] = useState(null);
+    const [users, setUsers] = useState([])
     const [comments, setComments] = useState([]);
     const [voteChanges, setVoteChanges] = useState({});
+    const [comment, setComment] = useState({ username:'', body:' '})
+    const [submitting, setSubmitting] = useState(false)
 
     const { article_id } = useParams()
 
@@ -25,11 +28,46 @@ export const SingleArticle = () => {
             setComments(body.comments)
         })
     }, [article_id])
+
+    useEffect(() => {
+        getUsers()
+        .then((body) => {
+            setUsers(body.users)
+    })
+    }, [])
     
     const handleVote = (article_id, vote) => {
             patchVotes(article_id, vote);
             setVoteChanges(prev => ({...prev, [article_id]: vote}));
             }
+
+    const handleUsername = (event) => {
+        setComment({ ...comment, username: event.target.value})
+    }
+
+    const handleBody = (event) => {
+        setComment({ ...comment, body: event.target.value})
+    }
+
+    const handleComment = (event) => {
+        event.preventDefault();
+        setSubmitting(true);
+        const newComment = {
+            username: comment.username,
+            body: comment.body
+        };
+        postComment(article_id, newComment)
+            .then((newComment) => {
+                setComments((prevComments) => [newComment, ...prevComments]);
+                setSubmitting(false);
+                setComment({ username: '', body: '' }); 
+            })
+            .catch((error) => {
+                console.error("Error posting comment:", error);
+                setSubmitting(false);
+            });
+    };
+
 
     return (
         <>
@@ -46,7 +84,38 @@ export const SingleArticle = () => {
                 <button disabled={voteChanges[article_id] === 1} onClick={() => handleVote(article_id, 1)}>+</button>
                 <p>Votes: {article.votes + voteChanges[article_id] || 0}</p>
                 <button disabled={voteChanges[article_id] === -1} onClick={() => handleVote(article_id, -1)}>-</button>
-                </div> 
+                <br></br><br></br>
+                <form onSubmit={handleComment}>
+                    <label htmlFor="comment">Leave a Comment</label>
+                    <br />
+                    <input 
+                        id="comment"
+                        placeholder="Comment"
+                        type="text"
+                        onChange={handleBody}
+                        value={comment.body}
+                    />
+                    <br />
+                    <br />
+                    <div className="username-dropdown">
+                    <select value={comment.username} onChange={handleUsername}>
+                        <option>Pick a Username</option>
+                        <option disabled > ----------------------- </option>
+                        {users.map((user) => (
+                        <option key={user.id} value={user.id}>{user.username}</option>
+                        ))}
+                    </select>
+                    </div>
+                    <br />
+
+                    <button className='comment-submit' type="submit">
+                        {submitting ? "Submitting..." : "Submit"}
+                    </button>
+                </form>
+                
+                
+                </div>
+                 
             )}
         </div>
 

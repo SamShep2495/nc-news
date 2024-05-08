@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react"
+import React,  { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getSingleArticle, getCommentsForArticle, getUsers } from "../../api.get"
 import { patchVotes } from "../../api.patch"
 import { postComment } from "../../api.post"
+import { deleteComment } from "../../api.delete"
 
 export const SingleArticle = () => {
 
@@ -68,6 +69,15 @@ export const SingleArticle = () => {
             });
     };
 
+    const handleDelete = (comment_id) => {
+        deleteComment(comment_id)
+            .then((res) => {
+                setComments(prevComments => prevComments.filter(comment => comment.comment_id !== comment_id));
+            })
+            .catch((err) => {
+                console.error("Error deleting comment", err)
+            })
+    }
 
     return (
         <>
@@ -108,7 +118,7 @@ export const SingleArticle = () => {
                     </div>
                     <br />
 
-                    <button className='comment-submit' type="submit">
+                    <button className="comment-submit" type="submit">
                         {submitting ? "Submitting..." : "Submit"}
                     </button>
                 </form>
@@ -122,11 +132,14 @@ export const SingleArticle = () => {
         <div className ="comment">
             {comments.map((comment) => {
             return (
-            <div>
+            <div key={comment.comment_id}>
             <p>Author: {comment.author}</p>
             <p>Comment: {comment.body}</p>
             <p>Votes: {comment.votes}</p>
             <p>Date: {comment.created_at}</p>
+            <button className="comment-delete" type="delete" onClick={() => handleDelete(comment.comment_id)}>
+                Delete this Comment
+            </button>
             </div>
             )
         })}

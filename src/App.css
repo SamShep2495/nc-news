@@ -79,3 +79,27 @@ a:hover {
   margin-bottom: 150px;
 }
 
+.username-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.username-dropdown select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.username-dropdown::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px dotted #ccc; /* Adjust styling as needed */
+  z-index: 1;
+}

@@ -32,7 +32,6 @@ const Header = () => {
             })
         }, [])
 
-
     return (
         <header id="header">
 
@@ -47,7 +46,7 @@ const Header = () => {
                 <div className="dropdown-content">
                     {topics.map((topic) => {
                         return (
-                            <Link to="/topic">{topic.slug}</Link>
+                            <Link to={`/topics/${topic.slug}`}>{topic.slug}</Link>
                         )
                     })}
                 </div>
@@ -58,7 +57,7 @@ const Header = () => {
                 <div className="dropdown-content">
                 {users.map((user) => {
                         return (
-                            <Link to="/:username">{user.name}</Link>
+                            <Link to={`/users/${user.username}`}>{user.name}</Link>
                         )
                     })}    
                 </div>

@@ -1,4 +1,4 @@
-import React,  { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getSingleArticle, getCommentsForArticle, getUsers } from "../../api.get"
 import { patchVotes } from "../../api.patch"
@@ -147,3 +147,5 @@ export const SingleArticle = () => {
         </>
     )
 }
+
+export default SingleArticle

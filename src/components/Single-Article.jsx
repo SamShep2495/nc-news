@@ -21,6 +21,9 @@ export const SingleArticle = () => {
         .then((body) => {
             setArticle(body[0])
         })
+        .catch((error) => {
+            console.error("Error fetching article:", error)
+        })
     }, [article_id])
 
     useEffect (() => {
@@ -28,13 +31,19 @@ export const SingleArticle = () => {
         .then((body) => {
             setComments(body.comments)
         })
+        .catch((error) => {
+            console.error("Error fetching comments:", error)
+        })
     }, [article_id])
 
     useEffect(() => {
         getUsers()
         .then((body) => {
             setUsers(body.users)
-    })
+        })
+        .catch((error) => {
+            console.error("Error fetching user:", error)
+        })
     }, [])
     
     const handleVote = (article_id, vote) => {

@@ -29,20 +29,25 @@ export const ArticleList = () => {
     }
 
     
-    useEffect(() => {
-        
+        useEffect(() => {
             getArticlesSorted(sortBy.sort, sortBy.order)
                 .then((body) => {
                     setArticles(body.articles);
                 })
-    }, [sortBy]);
+                .catch((error) => {
+                    console.error("Error fetching sorted articles:", error)
+                })
+        }, [sortBy]);
     
-    useEffect (() => {
-        getArticles()
-        .then((body) => {
-            setArticles(body.articles)
-        })
-    }, [])
+        useEffect (() => {
+            getArticles()
+                .then((body) => {
+                    setArticles(body.articles)
+                })
+                .catch((error) => {
+                    console.error("Error fetching articles:", error)
+                })
+        }, [])
     
     return (
         <> 

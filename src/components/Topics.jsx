@@ -11,6 +11,9 @@ export const Topic = () => {
             .then((body) => {
                 setArticles(body.articles);
             })
+            .catch((error) => {
+                console.error("Error fetching article:", error)
+            })
     }, []);
 
 

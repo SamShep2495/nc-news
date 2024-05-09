@@ -15,7 +15,10 @@ const Header = () => {
             getUsers()
             .then((body) => {
                 setUsers(body.users)
-        })
+            })
+            .catch((error) => {
+                console.error("Error fetching users:", error)
+            })
         }, [])
 
         useEffect(() => {
@@ -23,12 +26,18 @@ const Header = () => {
             .then((body) => {
                 setTopics(body.topics)
             })
+            .catch((error) => {
+                console.error("Error fetching topics:", error)
+            })
         }, [])
 
         useEffect (() => {
             getArticles()
             .then((body) => {
                 setArticles(body.articles)
+            })
+            .catch((error) => {
+                console.error("Error fetching articles:", error)
             })
         }, [])
 

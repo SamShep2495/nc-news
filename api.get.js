@@ -57,3 +57,16 @@ export const getCommentsForArticle = (article_id) => {
         throw err;
     });
 }
+
+export const getArticlesSorted = (sortBy, sortOrder) => {
+    console.log('55.', sortBy);
+    console.log('66.', sortOrder);
+    return ucArticlesUrl.get(`/articles?sort_by=${sortBy}&order=${sortOrder}`)
+    .then((res) => {
+        return res.data;
+    })
+    .catch((err) => {
+        console.error(err);
+        throw err;
+    });
+}

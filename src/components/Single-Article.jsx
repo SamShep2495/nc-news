@@ -99,6 +99,7 @@ export const SingleArticle = () => {
             <div className="single-card-content">
                 <p>Title: {article.title}</p>
                 <p>Topic: {article.topic}</p>
+                <p>Body {article.body}</p>
                 <p>Comments: {article.comment_count}</p>
                 <p>Date Posted: {article.created_at}</p>
                 <button disabled={voteChanges[article_id] === 1} onClick={() => handleVote(article_id, 1)}>+</button>

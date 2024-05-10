@@ -42,25 +42,7 @@ export const ArticleList = () => {
                 })
         }, [sortBy]);
     
-        useEffect (() => {
-            getArticles()
-                .then((body) => {
-                    setArticles(body.articles);
-                    setError(null);
-                })
-                .catch((error) => {
-                    console.error("Error fetching articles:", error)
-                    setError({error})
-                })
-        }, [])
 
-        if (error) {
-            return (
-                <div>
-                    <p>Error</p>
-                </div>
-            )
-        }
     
         return (
         <> 

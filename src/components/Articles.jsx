@@ -7,12 +7,12 @@ import { Link } from "react-router-dom"
 export const ArticleList = () => {
 
     const [articles, setArticles] = useState([]);
-    const [sortBy, setSortBy] = useState({sort: '', order: ''})
+    const [sortBy, setSortBy] = useState({sort: 'title', order: 'ASC'})
     const [error, setError] = useState(null)
     
     const handleSortBy = (event) => {
         const option = event.target.value;
-        let newSortBy = {sort: '', order: ''}
+        let newSortBy = {sort: 'title', order: 'ASC'}
         let sortedArticles = [...articles];
         if (option === "A-Z") {
             newSortBy = {sort: 'title', order: 'ASC'}
@@ -54,13 +54,13 @@ export const ArticleList = () => {
                 })
         }, [])
 
-        console.log('1.', {error}.error);
-
         if (error) {
-            return <div>{{error}.error}</div>
-        } else {
-
-        
+            return (
+                <div>
+                    <p>Error</p>
+                </div>
+            )
+        }
     
         return (
         <> 
@@ -101,7 +101,7 @@ export const ArticleList = () => {
         })}</div>
         </>
     )
-        }
+        
 }
 
 

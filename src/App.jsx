@@ -5,6 +5,7 @@ import Header from './components/Header'
 import { SingleArticle } from './components/Single-Article'
 import Topic from './components/Topics'
 import Author from './components/Authors'
+import { ErrorPage } from './components/ErrorPage'
 
 
 function App() {
@@ -13,12 +14,12 @@ function App() {
     <>
     <Header></Header>
       <Routes>
-        <Route path="*" element={<ArticleList />}/>
-        <Route path="/" element={<Navigate to="/articles" />} />
+        <Route path="/" element={<ArticleList />} />
         <Route path="/articles" element={ <ArticleList />}/>
         <Route path={`/articles/:article_id`} element={ <SingleArticle />}/>
         <Route path="/topics/:topic" element={ <Topic/>}/>
         <Route path="/users/:author" element={ <Author/>}/>
+        <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </>
   )

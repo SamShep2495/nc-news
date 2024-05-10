@@ -64,7 +64,6 @@ export const getArticlesSorted = (sortBy, sortOrder) => {
         return res.data;
     })
     .catch((err) => {
-        console.log('5.', err.message);
         console.error(err);
         throw err.message;
     });

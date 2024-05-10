@@ -2,6 +2,9 @@
 
 export const ErrorPage = () => {
     return (
-        <p>Error</p>
+        <div className='spacing'>
+            <p>Error</p>
+        </div>
+        
     )
 }

@@ -13,6 +13,7 @@ export const SingleArticle = () => {
     const [voteChanges, setVoteChanges] = useState({});
     const [comment, setComment] = useState({ username:'', body:' '})
     const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState(null);
 
     const { article_id } = useParams()
 
@@ -23,6 +24,7 @@ export const SingleArticle = () => {
         })
         .catch((error) => {
             console.error("Error fetching article:", error)
+            setError({error});
         })
     }, [article_id])
 
@@ -33,6 +35,7 @@ export const SingleArticle = () => {
         })
         .catch((error) => {
             console.error("Error fetching comments:", error)
+            setError({error});
         })
     }, [article_id])
 
@@ -43,6 +46,7 @@ export const SingleArticle = () => {
         })
         .catch((error) => {
             console.error("Error fetching user:", error)
+            setError({error});
         })
     }, [])
     
@@ -75,6 +79,7 @@ export const SingleArticle = () => {
             .catch((error) => {
                 console.error("Error posting comment:", error);
                 setSubmitting(false);
+                setError({error});
             });
     };
 
@@ -85,86 +90,102 @@ export const SingleArticle = () => {
             })
             .catch((err) => {
                 console.error("Error deleting comment", err)
+                setError({error});
             })
     }
 
-    return (
-        <>
-        <div className='spacing'></div>
+    if (error) {
+        return (
+            <div className='spacing'>
+                <p>Error</p>
+            </div>
+        )
+    } else {
 
-        <div>
-        {article && (
-            <div key={article.article_id} className="single-card">
-            <img src={article.article_img_url} alt="" />  
-            <div className="single-card-content">
-                <p>Title: {article.title}</p>
-                <p>Topic: {article.topic}</p>
-                <p>Body {article.body}</p>
-                <p>Comments: {article.comment_count}</p>
-                <p>Date Posted: {article.created_at}</p>
-                <button disabled={voteChanges[article_id] === 1} onClick={() => handleVote(article_id, 1)}>+</button>
-                <p>Votes: {article.votes + voteChanges[article_id] || 0}</p>
-                <button disabled={voteChanges[article_id] === -1} onClick={() => handleVote(article_id, -1)}>-</button>
-            </div>
-            </div>
-        )}
-            <div className="comment-card">
-                <div className="comment-card_content">
-                <form onSubmit={handleComment}>
-                    <label htmlFor="comment">Leave a Comment</label>
-                    <br />
-                    <input 
+    
+
+        return (
+            <>
+              <div className='spacing'></div>
+          
+              <div>
+                {article && (
+                  <div key={article.article_id} className="single-card">
+                    <img src={article.article_img_url} alt="" />  
+                    <div className="single-card-content">
+                      <p>Title: {article.title}</p>
+                      <p>Topic: {article.topic}</p>
+                      <p>Body: {article.body}</p>
+                      <p>Comments: {article.comment_count}</p>
+                      <p>Date Posted: {fixDate(article.created_at)}</p>
+                      <button disabled={voteChanges[article_id] === 1} onClick={() => handleVote(article_id, 1)}>+</button>
+                      <p>Votes: {article.votes + voteChanges[article_id] || 0}</p>
+                      <button disabled={voteChanges[article_id] === -1} onClick={() => handleVote(article_id, -1)}>-</button>
+                    </div>
+                  </div>
+                )}
+          
+                <div className="comment-card">
+                  <div className="comment-card_content">
+                    <form onSubmit={handleComment}>
+                      <label htmlFor="comment">Leave a Comment</label>
+                      <br />
+                      <input 
                         id="comment"
                         name="text"
-                        class='input'
+                        className='input'
                         placeholder="Comment"
                         type="text"
                         onChange={handleBody}
                         value={comment.body}
-                    />
-                    <br />
-                    <div className="sort-dropdown">
-                    <select value={comment.username} onChange={handleUsername}>
-                        <option>Pick a Username</option>
-                        <option disabled > ----------------------- </option>
-                        {users.map((user) => (
-                        <option key={user.id} value={user.id}>{user.username}</option>
-                        ))}
-                    </select>
-                    </div>
-                    
-
-                    <button class="learn-more" type="submit">
-                        <span class="circle" aria-hidden="true">
-                        <span class="icon arrow"></span>
+                      />
+                      <br />
+                      <div className="sort-dropdown">
+                        <select value={comment.username} onChange={handleUsername}>
+                          <option>Pick a Username</option>
+                          <option disabled>-----------------------</option>
+                          {users.map((user) => (
+                            <option key={user.id} value={user.id}>{user.username}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <button className="learn-more" type="submit">
+                        <span className="circle" aria-hidden="true">
+                          <span className="icon arrow"></span>
                         </span>
-                        <span class="button-text">{submitting ? "Submitting..." : "Submit"}</span>
-                    </button>
-                </form>
-                
+                        <span className="button-text">{submitting ? "Submitting..." : "Submit"}</span>
+                      </button>
+                    </form>
+                  </div>
                 </div>
-            </div>
-                 
-            
-        </div>
-
-        <div className ="comment">
-            {comments.map((comment) => {
-            return (
-            <div key={comment.comment_id}>
-            <p>Author: {comment.author}</p>
-            <p>Comment: {comment.body}</p>
-            <p>Votes: {comment.votes}</p>
-            <p>Date: {fixDate(comment.created_at)}</p>
-            <button className="comment-delete" type="delete" onClick={() => handleDelete(comment.comment_id)}>
-                Delete this Comment
-            </button>
-            </div>
-            )
-        })}
-        </div>
-        </>
-    )
+              </div>
+          
+              <div >
+                {comments.map((comment) => {
+                  return (
+                    <div className ="comment" key={comment.comment_id}>
+                      <p>Author: {comment.author}</p>
+                      <p>Comment: {comment.body}</p>
+                      <p>Votes: {comment.votes}</p>
+                      <p>Date: {fixDate(comment.created_at)}</p>
+                      <button className="learn-more" type="delete" onClick={() => handleDelete(comment.comment_id)}>
+                        <span className="circle" aria-hidden="true">
+                          <span className="icon arrow"></span>
+                        </span>
+                        <span className="button-text">Delete</span>
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )
+          
+}
 }
 
 export default SingleArticle
+
+
+                    

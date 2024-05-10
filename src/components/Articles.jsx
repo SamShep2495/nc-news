@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useState } from "react"
-import { getArticles, getArticlesSorted, fixDate } from "../../api.get"
+import { getArticlesSorted, fixDate } from "../../api.get"
 import { Link } from "react-router-dom"
 
 

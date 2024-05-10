@@ -59,14 +59,20 @@ export const getCommentsForArticle = (article_id) => {
 }
 
 export const getArticlesSorted = (sortBy, sortOrder) => {
-    console.log('55.', sortBy);
-    console.log('66.', sortOrder);
     return ucArticlesUrl.get(`/articles?sort_by=${sortBy}&order=${sortOrder}`)
     .then((res) => {
         return res.data;
     })
     .catch((err) => {
+        console.log('5.', err.message);
         console.error(err);
-        throw err;
+        throw err.message;
     });
 }
+
+
+export const fixDate = (timeStamp) => {
+    const date = new Date (timeStamp)
+    return date.toLocaleString()
+}
+

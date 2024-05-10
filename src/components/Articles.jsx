@@ -1,13 +1,14 @@
 import { useEffect } from "react"
 import { useState } from "react"
-import { getArticles, getArticlesSorted } from "../../api.get"
-
+import { getArticles, getArticlesSorted, fixDate } from "../../api.get"
+import { Link } from "react-router-dom"
 
 
 export const ArticleList = () => {
 
     const [articles, setArticles] = useState([]);
     const [sortBy, setSortBy] = useState({sort: '', order: ''})
+    const [error, setError] = useState(null)
     
     const handleSortBy = (event) => {
         const option = event.target.value;
@@ -33,27 +34,41 @@ export const ArticleList = () => {
             getArticlesSorted(sortBy.sort, sortBy.order)
                 .then((body) => {
                     setArticles(body.articles);
+                    setError(null);
                 })
                 .catch((error) => {
                     console.error("Error fetching sorted articles:", error)
+                    setError({error})
                 })
         }, [sortBy]);
     
         useEffect (() => {
             getArticles()
                 .then((body) => {
-                    setArticles(body.articles)
+                    setArticles(body.articles);
+                    setError(null);
                 })
                 .catch((error) => {
                     console.error("Error fetching articles:", error)
+                    setError({error})
                 })
         }, [])
+
+        console.log('1.', {error}.error);
+
+        if (error) {
+            return <div>{{error}.error}</div>
+        } else {
+
+        
     
-    return (
+        return (
         <> 
+    
+
         <div className='spacing'></div>
 
-        <div className="dropdown">
+        <div className="sort-dropdown">
                     <select onChange={handleSortBy}>
                         <option value="">Sort By</option>
                         <option disabled > ----------------------- </option>
@@ -68,22 +83,25 @@ export const ArticleList = () => {
         
 
         
-        <div className="card-container">{articles.map((article) => {
+        <div className="card-container">
+            {articles.map((article) => {
             return (
+                <Link to={`/articles/${article.article_id}`} key={article.article_id}>
                 <div key={article.article_id} className="card">
                 <img src={article.article_img_url} alt="Article Image" />
                 <div className="card__content">
                     <p className="card__title">{article.title}</p>
                     <p className="card__description">Topic: {article.topic}</p>
                     <p className="card__description">Comments: {article.comment_count}</p>
-                    <p className="card__description">Date: {article.created_at}</p>
+                    <p className="card__description">Date: {fixDate(article.created_at)}</p>
                 </div>
                 </div>
+                </Link>
         )
         })}</div>
         </>
     )
-
+        }
 }
 
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getSingleArticle, getCommentsForArticle, getUsers } from "../../api.get"
+import { getSingleArticle, getCommentsForArticle, getUsers, fixDate } from "../../api.get"
 import { patchVotes } from "../../api.patch"
 import { postComment } from "../../api.post"
 import { deleteComment } from "../../api.delete"
@@ -93,9 +93,10 @@ export const SingleArticle = () => {
         <div className='spacing'></div>
 
         <div>
-            {article && (
-                <div key={article.article_id} className="article-card">
-                <img className src={article.article_img_url} alt="" />  
+        {article && (
+            <div key={article.article_id} className="single-card">
+            <img src={article.article_img_url} alt="" />  
+            <div className="single-card-content">
                 <p>Title: {article.title}</p>
                 <p>Topic: {article.topic}</p>
                 <p>Comments: {article.comment_count}</p>
@@ -103,20 +104,25 @@ export const SingleArticle = () => {
                 <button disabled={voteChanges[article_id] === 1} onClick={() => handleVote(article_id, 1)}>+</button>
                 <p>Votes: {article.votes + voteChanges[article_id] || 0}</p>
                 <button disabled={voteChanges[article_id] === -1} onClick={() => handleVote(article_id, -1)}>-</button>
-                <br></br><br></br>
+            </div>
+            </div>
+        )}
+            <div className="comment-card">
+                <div className="comment-card_content">
                 <form onSubmit={handleComment}>
                     <label htmlFor="comment">Leave a Comment</label>
                     <br />
                     <input 
                         id="comment"
+                        name="text"
+                        class='input'
                         placeholder="Comment"
                         type="text"
                         onChange={handleBody}
                         value={comment.body}
                     />
                     <br />
-                    <br />
-                    <div className="username-dropdown">
+                    <div className="sort-dropdown">
                     <select value={comment.username} onChange={handleUsername}>
                         <option>Pick a Username</option>
                         <option disabled > ----------------------- </option>
@@ -125,17 +131,20 @@ export const SingleArticle = () => {
                         ))}
                     </select>
                     </div>
-                    <br />
+                    
 
-                    <button className="comment-submit" type="submit">
-                        {submitting ? "Submitting..." : "Submit"}
+                    <button class="learn-more" type="submit">
+                        <span class="circle" aria-hidden="true">
+                        <span class="icon arrow"></span>
+                        </span>
+                        <span class="button-text">{submitting ? "Submitting..." : "Submit"}</span>
                     </button>
                 </form>
                 
-                
                 </div>
+            </div>
                  
-            )}
+            
         </div>
 
         <div className ="comment">
@@ -145,7 +154,7 @@ export const SingleArticle = () => {
             <p>Author: {comment.author}</p>
             <p>Comment: {comment.body}</p>
             <p>Votes: {comment.votes}</p>
-            <p>Date: {comment.created_at}</p>
+            <p>Date: {fixDate(comment.created_at)}</p>
             <button className="comment-delete" type="delete" onClick={() => handleDelete(comment.comment_id)}>
                 Delete this Comment
             </button>
